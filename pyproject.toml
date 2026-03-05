@@ -1,0 +1,46 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "accounting-workflow-auto"
+version = "0.1.0"
+description = "Enterprise-ready automated accounting workflow MVP"
+authors = [
+    {name = "Your Name", email = "your.email@example.com"}
+]
+dependencies = [
+    "langchain",
+    "langchain-openai",
+    "python-dotenv",
+    "opencv-python",
+    "Pillow",
+    "playwright",
+    "pandas",
+    "openpyxl",
+    "pdfplumber",
+    "pytesseract",
+    "pdf2image",
+    "pydantic"
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "ruff",
+    "mypy",
+    "black"
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.mypy]
+python_version = "3.10"
+ignore_missing_imports = true
+strict = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]

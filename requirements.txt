@@ -1,0 +1,21 @@
+# Python Dependencies for MVP
+# Agent & Orchestration
+langchain
+langchain-openai
+python-dotenv
+
+# Vision & Screen Recording Processing
+opencv-python
+Pillow
+
+# Web Automation (for Exact / Blue10)
+playwright
+
+# Data processing (for Excel)
+pandas
+openpyxl
+
+# Document Processing & OCR (for Invoices/PDFs)
+pdfplumber
+pytesseract
+pdf2image
