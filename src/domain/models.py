@@ -11,20 +11,46 @@ class WorkflowStatus(str, Enum):
     NEEDS_REVIEW = "NEEDS_REVIEW"
 
 class Brand(str, Enum):
-    BRAND_A = "Brand A"
-    BRAND_B = "Brand B"
-    BRAND_C = "Brand C"
+    SACHA = "Sacha"
+    MANFIELD = "Manfield"
+    SISSYBOY = "Sissy Boy"
     UNKNOWN = "Unknown"
+
+class DocumentType(str, Enum):
+    PURCHASE_INVOICE = "PURCHASE_INVOICE"
+    SALES_INVOICE = "SALES_INVOICE"
+    INTERCOMPANY = "INTERCOMPANY"
+    CREDIT_NOTE = "CREDIT_NOTE"
+    UNKNOWN = "UNKNOWN"
+
+class LineItem(BaseModel):
+    """A single billable line item from an invoice."""
+    date: Optional[str] = None
+    description: str
+    quantity: Optional[float] = None
+    unit_price: Optional[float] = None
+    net_amount: float
+    tax_code: Optional[str] = None
 
 class InvoiceData(BaseModel):
     """Extracted data from an invoice."""
     invoice_number: Optional[str] = None
-    date: Optional[datetime] = None
+    date: Optional[str] = None
+    due_date: Optional[str] = None
     total_amount: Optional[float] = None
     currency: Optional[str] = Field(default="EUR")
     vendor_name: Optional[str] = None
     vendor_vat: Optional[str] = None
-    line_items: List[Dict[str, Any]] = Field(default_factory=list)
+    customer_name: Optional[str] = None
+    customer_vat: Optional[str] = None
+    payment_reference: Optional[str] = None
+    iban: Optional[str] = None
+    net_amount: Optional[float] = None
+    tax_amount: Optional[float] = None
+    gross_amount: Optional[float] = None
+    document_type: DocumentType = Field(default=DocumentType.UNKNOWN)
+    language: Optional[str] = None
+    line_items: List[LineItem] = Field(default_factory=list)
     confidence_score: float = Field(default=0.0, description="Overall confidence of the extraction")
 
 class EmailInvoice(BaseModel):

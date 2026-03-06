@@ -1,7 +1,7 @@
 # Accounting Workflow Automation MVP
 
 ## Overview
-This project is an MVP/demo for automating data entry and accounting workflows across software platforms like **Exact**, **Blue10**, and **Excel**. It is designed to use agentic workflows that ingest screen recordings and execute replicated tasks using specialized subagents.
+This project is an MVP/demo for automating data entry and accounting workflows across software platforms like **Exact**, **Blue10**, and **Excel**. It is designed for **on-premise/local server execution**, utilizing agentic workflows that ingest screen recordings and execute replicated tasks using specialized subagents.
 
 ## Goals
 1. **Screen Recording Ingestion**: Process video/screen workflows to understand the exact steps taken by human operators.

@@ -15,9 +15,9 @@ class Blue10ConnectorV2(AccountingPlatformConnector):
         self.authenticated = False
         # Mapping brands to Blue10 Company IDs (mocked)
         self.brand_company_mapping = {
-            Brand.BRAND_A: "COMP-001-A",
-            Brand.BRAND_B: "COMP-002-B",
-            Brand.BRAND_C: "COMP-003-C",
+            Brand.SACHA: "COMP-SAC-001",
+            Brand.MANFIELD: "COMP-MAN-002",
+            Brand.SISSYBOY: "COMP-SIS-003",
         }
 
     def authenticate(self) -> bool:
@@ -32,9 +32,9 @@ class Blue10ConnectorV2(AccountingPlatformConnector):
         self.authenticated = True
         return True
 
-    def submit_invoice(self, data: ExtractedData) -> str:
+    def submit_invoice(self, data: ExtractedData, template: Optional[Dict[str, Any]] = None) -> str:
         """
-        Uploads an invoice to Blue10 and assigns classification.
+        Uploads an invoice to Blue10 and assigns classification based on brand and template.
         """
         if not self.authenticated:
             raise Exception("Blue10-V2 connector not authenticated.")
@@ -44,11 +44,14 @@ class Blue10ConnectorV2(AccountingPlatformConnector):
         company_id = self.brand_company_mapping.get(brand, "MANUAL-REVIEW-REQUIRED")
         
         print(f"[Blue10-V2] Uploading document to Blue10. Assigned Brand: {brand}")
+        if template:
+            print(f"[Blue10-V2] Applying Bookkeeping Template: {template.get('default_ledger')} / {template.get('vat_code')}")
+        
         print(f"[Blue10-V2] Mapping to Company ID: {company_id}")
         
         # In reality: 
         # 1. POST /v2/documents (Upload binary) -> Returns DocumentID
-        # 2. PUT /v2/documents/{id}/classification (Set Company, DocType, etc.)
+        # 2. PUT /v2/documents/{id}/classification (Set Company, DocType, TemplateID, etc.)
         
         print(f"[Blue10-V2] Document uploaded and classified successfully. ID: {document_id}")
         return document_id
