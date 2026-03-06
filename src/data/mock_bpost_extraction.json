@@ -1,1 +1,44 @@
-{"classification": {"document_type": "PURCHASE_INVOICE", "confidence": 0.98, "language": "NL"}, "entities": {"vendor_name": "Bpost N.V.", "vendor_vat_id": "BE0214828695", "customer_name": "Sissyboy", "customer_vat_id": "NL800112233B01"}, "invoice_data": {"invoice_number": "258068335", "invoice_date": "2024-06-20", "due_date": "2024-07-20", "currency": "EUR", "payment_reference": "+++000/1111/2222+++", "iban": "BE12 3456 7890 1234"}, "financials": {"net_amount": 1200.62, "tax_amount": 250.13, "gross_amount": 1450.75, "tax_exemption_note": ""}, "line_items": [{"date": "2024-06-19", "description": "Pakjes verzending nationaal", "quantity": 150, "unit_price": 5.50, "net_amount": 825.00, "tax_code": "21%"}, {"date": "2024-06-19", "description": "Internationale zendingen", "quantity": 25, "unit_price": 15.02, "net_amount": 375.62, "tax_code": "21%"}]}
+{
+  "classification": {
+    "document_type": "PURCHASE_INVOICE",
+    "language": "NL"
+  },
+  "entities": {
+    "vendor_name": "bpost NV", 
+    "vendor_vat_id": "BE0214596464", 
+    "customer_name": "SISSY-BOY B.V.", 
+    "customer_vat_id": "NL859957664B01" 
+  },
+  "invoice_data": {
+    "invoice_number": "258068335", 
+    "invoice_date": "2025-11-30", 
+    "due_date": "2025-12-30", 
+    "currency": "EUR",
+    "payment_reference": "+++025/8068/33529+++", 
+    "iban": "BE50000400000718" 
+  },
+  "financials": {
+    "net_amount": 16398.70, 
+    "tax_amount": 0.00, 
+    "gross_amount": 16398.70, 
+    "tax_exemption_note": "25-Handeling buiten België, BTW te voldoen door de medecontractant - Artikel 44 en 196 Richtlijn 2006/112/EG" 
+  },
+  "line_items": [
+    {
+      "date": "2025-10-20",
+      "description": "BPACK 24H PRO - Weight Range 0-2 kg",
+      "quantity": 1.0,
+      "unit_price": 4.76,
+      "net_amount": 4.76,
+      "tax_code": "25"
+    },
+    {
+      "date": "2025-10-20",
+      "description": "Supplement Parcel Density",
+      "quantity": 1.0,
+      "unit_price": 0.26,
+      "net_amount": 0.26,
+      "tax_code": "25"
+    }
+  ]
+}

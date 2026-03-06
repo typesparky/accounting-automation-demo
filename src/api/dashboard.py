@@ -366,6 +366,64 @@ with st.sidebar:
     st.info("View process flow and potential extensions.")
     if st.button("Open Automation Overview"):
         st.markdown("[Automation Overview →](#)", unsafe_allow_html=True)
+    
+    st.markdown("---")
+    st.markdown("### 🗑️ CACHE")
+    st.info("Clear cached data and start fresh.")
+    if st.button("Clear All Cache"):
+        st.session_state.processing_docs = []
+        st.session_state.ocr_results = {}
+        st.session_state.verified_docs = {}
+        st.session_state.show_email_preview = False
+        st.toast("Cache cleared successfully!")
+        st.rerun()
+
+    st.markdown("---")
+    st.markdown("### 🧪 DEMO MODE")
+    st.info("Inject Bpost invoice to instantly populate the pipeline.")
+    if st.button("Seed Demo Cache"):
+        doc_id = "UP-F53C92"
+        st.session_state.processing_docs = [{
+            "id": doc_id,
+            "source": "Upload",
+            "vendor": "Manual",
+            "received": datetime.now().strftime("%H:%M:%S"),
+            "file_path": "Sissyboy _25311197_Bpost N.V._258068335_PurchaseInvoice.pdf"
+        }]
+        
+        import json
+        cache_path = os.path.join("src", "data", "mock_bpost_extraction.json")
+        with open(cache_path, "r") as f:
+            raw_data = json.load(f)
+            
+        st.session_state.ocr_results = {
+            doc_id: {
+                "vendor": raw_data["entities"]["vendor_name"],
+                "customer": raw_data["entities"]["customer_name"],
+                "amount": raw_data["financials"]["gross_amount"],
+                "net_amount": raw_data["financials"]["net_amount"],
+                "tax_amount": raw_data["financials"]["tax_amount"],
+                "date": raw_data["invoice_data"]["invoice_date"],
+                "due_date": raw_data["invoice_data"]["due_date"],
+                "vat_id": raw_data["entities"]["vendor_vat_id"],
+                "customer_vat": raw_data["entities"]["customer_vat_id"],
+                "currency": raw_data["invoice_data"]["currency"],
+                "invoice_number": raw_data["invoice_data"]["invoice_number"],
+                "document_type": raw_data["classification"]["document_type"],
+                "language": raw_data["classification"]["language"],
+                "payment_reference": raw_data["invoice_data"]["payment_reference"],
+                "iban": raw_data["invoice_data"]["iban"],
+                "detected_brand": Brand.UNKNOWN,
+                "line_items": raw_data["line_items"],
+                "validation_passed": True,
+                "validation_message": "✅ Validation Passed: Math perfectly balances.",
+                "validation_delta": 0.0,
+            }
+        }
+        st.session_state.verified_docs = {}
+        st.session_state.show_email_preview = False
+        st.toast("Demo cache seeded! View the OCR Hub.")
+        st.rerun()
 
 # Step 1: Ingest
 with tabs[0]:
@@ -616,19 +674,23 @@ with tabs[2]:
             
             for doc_id, data in st.session_state.ocr_results.items():
                 brand = data['detected_brand']
-                template = st.session_state.kb.get_template_for_brand(brand)
+                template = st.session_state.kb.get_template_for_brand(brand) if hasattr(st.session_state.kb, 'get_template_for_brand') else {}
+                
+                # Format amounts properly, e.g. €16,398.70
+                amount_formatted = f"€{data.get('amount', 0.0):,.2f}"
+                
                 email_content += f"""
 **Invoice: {doc_id}**
-- {t('vendor')}: {data['vendor']}
-- {t('amount')}: €{data.get('amount', 0.0):,.2f}
-- Date: {data['date']}
-- {t('entity')}: {brand.value}
-- Currency: {data['currency']}
-- VAT ID: {data['vat_id']}
-- General Ledger: {template.get('default_ledger')}
-- VAT Category: {template.get('vat_code')}
-- Cost Center: {template.get('cost_center')}
-- Payment Terms: {template.get('payment_term')}
+- Vendor: {data.get('vendor', 'Unknown')}
+- Amount: {amount_formatted}
+- Date: {data.get('date', 'Unknown')}
+- Entity: {brand.value if hasattr(brand, 'value') else brand}
+- Currency: {data.get('currency', 'Unknown')}
+- VAT ID: {data.get('vat_id', 'Unknown')}
+- General Ledger: {template.get('default_ledger', 'None')}
+- VAT Category: {template.get('vat_code', 'None')}
+- Cost Center: {template.get('cost_center', 'None')}
+- Payment Terms: {template.get('payment_term', 'None')}
 """
             
             email_content += "\n---\n\n**Next Steps:**\n- Review and approve in Exact Online\n- Process payment according to vendor terms\n\nBest regards,\nTermeer Group Automation System"
